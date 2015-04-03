@@ -2,18 +2,21 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   applicationComplete="init(event)">
+					   applicationComplete="init(event)"
+					   windowResize="onWindowResize(event)">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
+			import mx.events.FlexNativeWindowBoundsEvent;
 			
 			import pl.cdaction.view.GridView;
+			
 			
 			
 			private var _gridView : GridView;
 			
 			
-			protected function init(event:FlexEvent):void
+			protected function init(event : FlexEvent) : void
 			{
 				trace("[ProjectCDA.mxml] INIT");
 				
@@ -21,9 +24,16 @@
 				mainContainer.addChild(_gridView);
 			}
 			
-			private function addGridObject():void
+			private function addGridObject() : void
 			{
 				_gridView.addNew();
+			}
+			
+			
+			private function onWindowResize(event : FlexNativeWindowBoundsEvent) : void
+			{
+				if(_gridView)
+					_gridView.handleResize();
 			}
 			
 		]]>
