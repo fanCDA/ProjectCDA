@@ -22,7 +22,7 @@ package pl.cdaction.view
 		
 		public function addNew() : void
 		{
-			var gridObj : GridObject = new GridObject();
+			var gridObj : GridObject = new GridObject( _gridItems.length );
 			
 			var totalItems : int = _gridItems.length;
 			var itemsInRow : int = Math.floor( stage.width / (gridObj.width + ITEMS_GAP) );
@@ -39,10 +39,9 @@ package pl.cdaction.view
 		{
 			if(_gridItems.length > 0)
 			{
-				var totalItems : int = _gridItems.length;
 				var itemsInRow : int = Math.floor( stage.width / (_gridItems[0].width + ITEMS_GAP) );
 				
-				var i :int = 0;
+				var i : int = 0;
 				for each(var gridObj : GridObject in _gridItems)
 				{
 					gridObj.x = (i % itemsInRow) * (gridObj.width + ITEMS_GAP);
