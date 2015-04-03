@@ -1,8 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   applicationComplete="init(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import pl.cdaction.view.GridView;
+			
+			
+			private var _gridView : GridView;
+			
+			
+			protected function init(event:FlexEvent):void
+			{
+				trace("[ProjectCDA.mxml] INIT");
+				
+				_gridView = new GridView();
+				mainContainer.addChild(_gridView);
+			}
+			
+			private function addGridObject():void
+			{
+				_gridView.addNew();
+			}
+			
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	
+	<s:VGroup>
+		<s:Button label="Add Grid Object" click="addGridObject()" />
+		<mx:UIComponent id="mainContainer" />
+	</s:VGroup>
 </s:WindowedApplication>
