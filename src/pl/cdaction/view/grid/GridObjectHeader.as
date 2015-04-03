@@ -13,6 +13,11 @@ package pl.cdaction.view.grid
 		
 		public function GridObjectHeader()
 		{
+			init();
+		}
+		
+		private function init() : void
+		{
 			_tfLeft = new TextField();
 			_tfLeft.width = Constants.GRID_OBJECT_WIDTH * 0.5;
 			_tfLeft.height = 20;

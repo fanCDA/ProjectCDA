@@ -11,7 +11,6 @@ package pl.cdaction.view.grid
 		
 		public function GridView()
 		{
-			super();
 			init();
 		}
 		
