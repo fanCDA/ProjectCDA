@@ -1,4 +1,4 @@
-package pl.cdaction.view
+package pl.cdaction.view.grid
 {
 	import flash.display.Sprite;
 	

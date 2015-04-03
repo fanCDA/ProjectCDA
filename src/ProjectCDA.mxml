@@ -9,7 +9,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.FlexNativeWindowBoundsEvent;
 			
-			import pl.cdaction.view.GridView;
+			import pl.cdaction.view.grid.GridView;
 			
 			
 			
