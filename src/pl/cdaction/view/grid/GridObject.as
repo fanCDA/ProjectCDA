@@ -5,6 +5,7 @@ package pl.cdaction.view.grid
 	import flash.text.TextFieldType;
 	
 	import pl.cdaction.common.Constants;
+	import pl.cdaction.view.page.PageContainer;
 	
 	public class GridObject extends Sprite
 	{
@@ -13,6 +14,8 @@ package pl.cdaction.view.grid
 		private var _bg : Sprite;
 		private var _header : GridObjectHeader;
 		private var _tfLabel : TextField;
+		private var _pageContainerLeft : PageContainer;
+		private var _pageContainerRight : PageContainer;
 		
 		
 		public function GridObject( index : int )
@@ -41,6 +44,16 @@ package pl.cdaction.view.grid
 			_tfLabel.border = true;
 			_tfLabel.y = _header.y + _header.height;
 			addChild(_tfLabel);
+			
+			
+			_pageContainerLeft = new PageContainer(_bg.width * 0.5, _bg.height - _header.height - _tfLabel.height - 1);
+			_pageContainerLeft.y = _tfLabel.y + _tfLabel.height + 1;
+			addChild(_pageContainerLeft);
+			
+			_pageContainerRight = new PageContainer(_bg.width * 0.5, _bg.height - _header.height - _tfLabel.height - 1);
+			_pageContainerRight.x = _bg.width * 0.5;
+			_pageContainerRight.y = _pageContainerLeft.y;
+			addChild(_pageContainerRight);
 		}
 	}
 }
