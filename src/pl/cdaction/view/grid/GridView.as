@@ -102,8 +102,8 @@ package pl.cdaction.view.grid
 			else
 			{
 				var itemsInRow : int = Math.floor( stage.stageWidth / (Constants.GRID_OBJECT_WIDTH + Constants.GRID_ITEMS_GAP) );
-				var destX : int = Math.floor( (this.mouseX - Constants.GRID_OBJECT_WIDTH * 0.5) / (Constants.GRID_OBJECT_WIDTH + Constants.GRID_ITEMS_GAP) );
-				var destY : int = Math.floor( this.mouseY / (Constants.GRID_OBJECT_HEIGHT + Constants.GRID_ITEMS_GAP) );
+				var destX : int = Math.max(0, Math.floor( (this.mouseX + Constants.GRID_OBJECT_WIDTH * 0.5 + Constants.GRID_ITEMS_GAP) / (Constants.GRID_OBJECT_WIDTH + Constants.GRID_ITEMS_GAP) ));
+				var destY : int = Math.max(0, Math.floor( this.mouseY / (Constants.GRID_OBJECT_HEIGHT + Constants.GRID_ITEMS_GAP) ));
 				var destIndex : int = destY * itemsInRow + destX;
 				
 				if(currIndex == destIndex)
