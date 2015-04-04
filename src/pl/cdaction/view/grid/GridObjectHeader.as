@@ -19,11 +19,13 @@ package pl.cdaction.view.grid
 		private function init() : void
 		{
 			_tfLeft = new TextField();
+			_tfLeft.name = "header";
 			_tfLeft.width = Constants.GRID_OBJECT_WIDTH * 0.5;
 			_tfLeft.height = 20;
 			addChild(_tfLeft);
 			
 			_tfRight = new TextField();
+			_tfRight.name = "header";
 			_tfRight.width = Constants.GRID_OBJECT_WIDTH * 0.5;
 			_tfRight.height = 20;
 			_tfRight.x = Constants.GRID_OBJECT_WIDTH - _tfRight.width;

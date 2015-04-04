@@ -4,5 +4,6 @@ package pl.cdaction.common
 	{
 		public static const GRID_OBJECT_WIDTH	: Number = 160;
 		public static const GRID_OBJECT_HEIGHT	: Number = 160;
+		public static const GRID_ITEMS_GAP	: Number = 10;
 	}
 }

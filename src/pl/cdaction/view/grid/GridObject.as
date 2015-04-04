@@ -25,7 +25,7 @@ package pl.cdaction.view.grid
 			init();
 		}
 		
-		private function init():void
+		private function init() : void
 		{
 			_bg = new Sprite();
 			_bg.graphics.beginFill(0xEEEEEE);
@@ -54,6 +54,12 @@ package pl.cdaction.view.grid
 			_pageContainerRight.x = _bg.width * 0.5;
 			_pageContainerRight.y = _pageContainerLeft.y;
 			addChild(_pageContainerRight);
+		}
+		
+		public function updateIndex(newIndex : int) : void
+		{
+			_index = newIndex;
+			_header.setLabels( (2*_index + 1).toString(), (2*_index + 2).toString() );
 		}
 	}
 }
