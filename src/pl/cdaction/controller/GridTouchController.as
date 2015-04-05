@@ -3,8 +3,10 @@ package pl.cdaction.controller
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.TextField;
 	
 	import pl.cdaction.common.Constants;
+	import pl.cdaction.view.customizable.ICustomizable;
 	import pl.cdaction.view.grid.GridObject;
 	import pl.cdaction.view.grid.GridView;
 
@@ -50,6 +52,14 @@ package pl.cdaction.controller
 			if(event.currentTarget is GridObject && event.target.name == "header")
 			{
 				startDraggingGridObject( event.currentTarget as GridObject );
+			}
+			
+			if(event.target is TextField && event.target.name == "tfCustomizable")
+			{
+				if(event.target.parent is ICustomizable)
+				{
+					_gridView.sigCustomizeMe.dispatch(event.target.parent);
+				}
 			}
 		}
 		

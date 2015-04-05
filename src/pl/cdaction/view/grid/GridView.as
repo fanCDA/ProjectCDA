@@ -2,11 +2,14 @@ package pl.cdaction.view.grid
 {
 	import flash.display.Sprite;
 	
+	import org.osflash.signals.Signal;
+	
 	import pl.cdaction.common.Constants;
 	import pl.cdaction.controller.GridTouchController;
 	
 	public class GridView extends Sprite
 	{
+		private var _sigCustomizeMe : Signal;
 		private var _gridItems : Vector.<GridObject>;
 		private var _touchController : GridTouchController;
 		
@@ -18,6 +21,7 @@ package pl.cdaction.view.grid
 		
 		private function init() : void
 		{
+			_sigCustomizeMe = new Signal();
 			_gridItems = new Vector.<GridObject>();
 			_touchController = new GridTouchController(this);
 		}
@@ -70,6 +74,11 @@ package pl.cdaction.view.grid
 		public function get totalItems() : int
 		{
 			return _gridItems.length;
+		}
+		
+		public function get sigCustomizeMe() : Signal
+		{
+			return _sigCustomizeMe;
 		}
 	}
 }

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%"
+		 height="100%"
+		 creationComplete="init(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.ColorPickerEvent;
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			import pl.cdaction.common.Constants;
+			import pl.cdaction.view.customizable.ICustomizable;
+			
+			
+			private var _fontsDict : Dictionary;
+			
+			private var _obj : ICustomizable;
+			private var _textFormat : TextFormat;
+			
+			
+			protected function init(event : FlexEvent) : void
+			{
+				_fontsDict = new Dictionary();
+				
+				var allFonts : Array = Font.enumerateFonts(true);
+				allFonts.sortOn("fontName", Array.CASEINSENSITIVE);
+				
+				var i:int = 0;
+				for each(var font:Font in allFonts)
+				{
+//					trace( font.fontName+":"+font.fontType );
+					_fontsDict[font.fontName] = i;
+					i++;
+				}
+				
+				fontList.dataProvider = new ArrayCollection( allFonts );
+				
+				// Default selection
+				if(_fontsDict[Constants.DEFAULT_FONT_NAME])
+					fontList.selectedIndex = _fontsDict[Constants.DEFAULT_FONT_NAME];
+				
+				
+				disableAll();
+			}
+			
+			public function disableAll() : void
+			{
+				fontList.enabled = fontSize.enabled = fontColour.enabled = false;
+				bgColour.enabled = false;
+			}
+			
+			public function enableAll() : void
+			{
+				fontList.enabled = fontSize.enabled = fontColour.enabled = true;
+				bgColour.enabled = true;
+			}
+			
+			
+			public function registerObjToCustomize(obj : ICustomizable) : void
+			{
+				_obj = obj;
+				_textFormat = _obj.getTextFormat();
+				
+				if(_textFormat.font != null && _fontsDict[_textFormat.font])
+					fontList.selectedIndex = _fontsDict[_textFormat.font];
+				else
+					fontList.selectedIndex = _fontsDict[Constants.DEFAULT_FONT_NAME];
+				
+				
+				if(_textFormat.size != null)
+					fontSize.text = _textFormat.size + "";
+				else
+					fontSize.text = Constants.DEFAULT_FONT_SIZE + "";
+				
+				
+				if(_textFormat.color != null)
+					fontColour.selectedColor = uint(_textFormat.color);
+				else
+					fontColour.selectedColor = Constants.DEFAULT_FONT_COLOUR;
+				
+				
+				bgColour.selectedColor = _obj.getBgColour();
+				
+				
+				enableAll();
+			}
+			
+			
+			
+			protected function handleFontChange(event : IndexChangeEvent) : void
+			{
+				_textFormat.font = event.currentTarget.selectedItem.fontName;
+				
+				if(_obj)
+					_obj.setTextFormat(_textFormat);
+			}
+			
+			protected function handleFontSizeChange(event : TextOperationEvent) : void
+			{
+				_textFormat.size = event.currentTarget.text;
+				
+				if(_obj)
+					_obj.setTextFormat(_textFormat);
+			}
+			
+			protected function handleFontColourChange(event:ColorPickerEvent):void
+			{
+				_textFormat.color = event.currentTarget.selectedItem;
+				
+				if(_obj)
+					_obj.setTextFormat(_textFormat);
+			}
+			
+			
+			protected function handleBgColourChange(event : ColorPickerEvent) : void
+			{
+				if(_obj)
+					_obj.setBgColour(event.currentTarget.selectedItem);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<mx:SolidColor color="0xCECECE" alpha="0.8"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup>
+		<s:DropDownList id="fontList" labelField="fontName" width="200" prompt="Font names:" change="handleFontChange(event)" />
+		<s:TextInput id="fontSize" width="30" text="12" change="handleFontSizeChange(event)" />
+		<mx:ColorPicker id="fontColour" change="handleFontColourChange(event)" />
+		<s:Label width="50"/>
+		<mx:ColorPicker id="bgColour" change="handleBgColourChange(event)" />
+	</s:HGroup>
+</s:Group>
