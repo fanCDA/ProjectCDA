@@ -45,11 +45,11 @@ package pl.cdaction.view.customizable
 		
 		public function getTextFormat() : TextFormat
 		{
-			return _tf.getTextFormat();
+			return _tf.defaultTextFormat;
 		}
 		public function setTextFormat(value : TextFormat) : void
 		{
-			_tf.setTextFormat( value );
+			_tf.defaultTextFormat = value;
 		}
 		
 		public function getBgColour() : uint
