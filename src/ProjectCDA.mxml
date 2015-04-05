@@ -10,10 +10,14 @@
 			import mx.events.FlexEvent;
 			import mx.events.FlexNativeWindowBoundsEvent;
 			
+			import pl.cdaction.common.Globals;
 			import pl.cdaction.view.customizable.ICustomizable;
 			import pl.cdaction.view.grid.GridView;
 			
 			
+			private var _currentFile : File;
+			private var _docsDir : File;
+			private var _fileStream : FileStream;
 			
 			private var _gridView : GridView;
 			
@@ -22,6 +26,10 @@
 			{
 				trace("[ProjectCDA.mxml] INIT");
 				
+				var tmpTf : TextField = new TextField();
+				Globals.DEFAULT_TEXT_FORMAT = tmpTf.defaultTextFormat;
+				
+				_docsDir = File.documentsDirectory;
 				_gridView = new GridView();
 				mainContainer.addChild(_gridView);
 				
@@ -45,6 +53,76 @@
 					_gridView.handleResize();
 			}
 			
+			
+			private function saveFile() : void
+			{
+				if(_currentFile)
+				{
+					//Just save
+					performSaving();
+				}
+				else
+				{
+					//Pick where we should save
+					browseForSaving();
+				}
+			}
+			
+			private function browseForSaving() : void
+			{
+				btnSave.enabled = false;
+				
+				try
+				{
+					_docsDir.browseForSave("Gdzie zapisac?");
+					_docsDir.addEventListener(Event.SELECT, handleFileSelected);
+					_docsDir.addEventListener(Event.CANCEL, handleCancelBrowsing);
+				}
+				catch (error:Error)
+				{
+					trace("Cos poszlo nie tak:", error.message);
+				}
+			}
+			
+			private function handleFileSelected(event : Event) : void
+			{
+				btnSave.enabled = true;
+				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
+				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+				
+				_currentFile = new File( (event.target as File).nativePath + ".json" );
+				performSaving();
+			}
+			
+			protected function handleCancelBrowsing(event:Event):void
+			{
+				btnSave.enabled = true;
+				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
+				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+			}
+			
+			private function performSaving() : void
+			{
+				var gridObjects : Object = _gridView.getAllItemsAsObject();
+				
+				if(_fileStream == null)
+					_fileStream = new FileStream();
+				
+				try
+				{
+					_fileStream.open(_currentFile, FileMode.WRITE);
+					_fileStream.writeUTFBytes( JSON.stringify(gridObjects) );
+				}
+				catch (e:Error)
+				{
+					trace(e.message);
+				}
+				finally
+				{
+					_fileStream.close();
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -53,6 +131,9 @@
 	</fx:Declarations>
 	
 	<s:VGroup width="100%">
+		<s:HGroup>
+			<s:Button id="btnSave" label="Save" click="saveFile()" />
+		</s:HGroup>
 		<s:Button label="Add Grid Object" click="addGridObject()" />
 		<customize:CustomizePanel id="customizePanel" />
 		<mx:UIComponent id="mainContainer" />

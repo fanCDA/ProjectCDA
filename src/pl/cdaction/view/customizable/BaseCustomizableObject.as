@@ -42,6 +42,11 @@ package pl.cdaction.view.customizable
 			addChild(_tf);
 		}
 		
+		public function getText() : String
+		{
+			return _tf.text;
+		}
+		
 		
 		public function getTextFormat() : TextFormat
 		{

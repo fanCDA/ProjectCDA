@@ -61,5 +61,20 @@ package pl.cdaction.view.grid
 			_index = newIndex;
 			_header.setLabels( (2*_index + 1).toString(), (2*_index + 2).toString() );
 		}
+		
+		
+		public function getLabel() : String
+		{
+			return _tfLabel.text;
+		}
+		
+		public function getLeftPageContent() : Array
+		{
+			return [ _pageContainerLeft.getPageObject() ];
+		}
+		public function getRightPageContent() : Array
+		{
+			return [ _pageContainerRight.getPageObject() ];
+		}
 	}
 }

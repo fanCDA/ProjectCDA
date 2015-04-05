@@ -80,5 +80,34 @@ package pl.cdaction.view.grid
 		{
 			return _sigCustomizeMe;
 		}
+		
+		
+		public function getAllItemsAsObject() : Object
+		{
+			var mainObj : Object = {};
+			mainObj.totalItems = totalItems;
+			
+			var objectsArray : Array = [];
+			
+			for each(var gridObj:GridObject in _gridItems)
+			{
+				var obj : Object = {};
+				
+				var label : String = gridObj.getLabel();
+				if(label != "")
+					obj.label = label;
+				
+				obj.pageL = gridObj.getLeftPageContent();
+				obj.pageR = gridObj.getRightPageContent();
+				
+				objectsArray.push( obj );
+			}
+			
+			
+			if(objectsArray.length > 0)
+				mainObj.gridObjects = objectsArray;
+			
+			return mainObj;
+		}
 	}
 }
