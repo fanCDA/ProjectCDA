@@ -2,6 +2,8 @@ package pl.cdaction.view.grid
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	import pl.cdaction.common.Constants;
 	
@@ -25,6 +27,9 @@ package pl.cdaction.view.grid
 			addChild(_tfLeft);
 			
 			_tfRight = new TextField();
+			var textFormat : TextFormat = _tfRight.defaultTextFormat;
+			textFormat.align = TextFormatAlign.RIGHT;
+			_tfRight.defaultTextFormat = textFormat;
 			_tfRight.name = "header";
 			_tfRight.width = Constants.GRID_OBJECT_WIDTH * 0.5;
 			_tfRight.height = 20;
