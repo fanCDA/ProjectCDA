@@ -50,6 +50,7 @@ package pl.cdaction.view.customizable
 		public function setTextFormat(value : TextFormat) : void
 		{
 			_tf.defaultTextFormat = value;
+			_tf.setTextFormat(value);
 		}
 		
 		public function getBgColour() : uint
