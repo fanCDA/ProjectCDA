@@ -70,7 +70,7 @@
 			
 			private function browseForSaving() : void
 			{
-				btnSave.enabled = false;
+				btnSave.enabled = btnSaveAs.enabled = false;
 				
 				try
 				{
@@ -86,7 +86,7 @@
 			
 			private function handleFileSelected(event : Event) : void
 			{
-				btnSave.enabled = true;
+				btnSave.enabled = btnSaveAs.enabled = true;
 				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
 				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
 				
@@ -96,7 +96,7 @@
 			
 			protected function handleCancelBrowsing(event:Event):void
 			{
-				btnSave.enabled = true;
+				btnSave.enabled = btnSaveAs.enabled = true;
 				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
 				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
 			}
@@ -133,6 +133,7 @@
 	<s:VGroup width="100%">
 		<s:HGroup>
 			<s:Button id="btnSave" label="Save" click="saveFile()" />
+			<s:Button id="btnSaveAs" label="Save as.." click="browseForSaving()" />
 		</s:HGroup>
 		<s:Button label="Add Grid Object" click="addGridObject()" />
 		<customize:CustomizePanel id="customizePanel" />
