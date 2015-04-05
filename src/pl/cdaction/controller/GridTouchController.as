@@ -119,7 +119,7 @@ package pl.cdaction.controller
 				}
 				else
 				{
-					_gridView.moveGridItem(currIndex, destIndex, _obj)
+					_gridView.moveGridItem(currIndex, destIndex < currIndex ? destIndex : destIndex - 1, _obj);
 				}
 			}
 			
