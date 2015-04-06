@@ -75,7 +75,7 @@
 				try
 				{
 					_docsDir.browseForSave("Gdzie zapisac?");
-					_docsDir.addEventListener(Event.SELECT, handleFileSelected);
+					_docsDir.addEventListener(Event.SELECT, handleFileForSaveSelected);
 					_docsDir.addEventListener(Event.CANCEL, handleCancelBrowsing);
 				}
 				catch (error:Error)
@@ -84,21 +84,19 @@
 				}
 			}
 			
-			private function handleFileSelected(event : Event) : void
+			private function handleFileForSaveSelected(event : Event) : void
 			{
 				btnSave.enabled = btnSaveAs.enabled = true;
-				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
-				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+				cleanListeners();
 				
 				_currentFile = new File( (event.target as File).nativePath + ".json" );
 				performSaving();
 			}
 			
-			protected function handleCancelBrowsing(event:Event):void
+			protected function handleCancelBrowsing(event:Event) : void
 			{
 				btnSave.enabled = btnSaveAs.enabled = true;
-				_docsDir.removeEventListener(Event.SELECT, handleFileSelected);
-				_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+				cleanListeners();
 			}
 			
 			private function performSaving() : void
@@ -123,6 +121,78 @@
 				}
 			}
 			
+			
+			private function browseForOpening() : void
+			{
+				var fileFilter : FileFilter = new FileFilter("JSON data files", "*.json");
+				
+				if(_currentFile)
+				{
+					_currentFile.addEventListener(Event.SELECT, handleFileForOpenSelected);
+					_currentFile.addEventListener(Event.CANCEL, handleCancelBrowsing);
+					_currentFile.browseForOpen("Gdzie ten plik?", [fileFilter] );
+				}
+				else
+				{
+					_docsDir.addEventListener(Event.SELECT, handleFileForOpenSelected);
+					_docsDir.addEventListener(Event.CANCEL, handleCancelBrowsing);
+					_docsDir.browseForOpen("Gdzie ten plik?", [fileFilter] );
+				}
+			}
+			
+			private function handleFileForOpenSelected(event : Event) : void
+			{
+				btnSave.enabled = btnSaveAs.enabled = true;
+				cleanListeners();
+				
+				_currentFile = event.target as File;
+				
+				if(_fileStream == null)
+					_fileStream = new FileStream();
+				
+				try
+				{
+					_fileStream.open(_currentFile, FileMode.READ);
+					var fileDataString : String = _fileStream.readUTFBytes( _fileStream.bytesAvailable );
+					var fileDataObj : Object = JSON.parse( fileDataString );
+				}
+				catch (e:Error)
+				{
+					trace(e.message);
+				}
+				finally
+				{
+					_fileStream.close();
+					handleFileDataLoadedAndParsed( fileDataObj );
+				}
+			}
+			
+			private function handleFileDataLoadedAndParsed(fileDataObj : Object) : void
+			{
+				trace("Total =>", fileDataObj.totalItems);
+				for each(var obj:Object in fileDataObj.gridObjects)
+				{
+					trace(obj.pageL, obj.pageR);
+				}
+			}
+			
+			
+			
+			private function cleanListeners() : void
+			{
+				if(_docsDir)
+				{
+					_docsDir.removeEventListener(Event.SELECT, handleFileForSaveSelected);
+					_docsDir.removeEventListener(Event.SELECT, handleFileForOpenSelected);
+					_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+				}
+				if(_currentFile)
+				{
+					_currentFile.removeEventListener(Event.SELECT, handleFileForOpenSelected);
+					_currentFile.removeEventListener(Event.CANCEL, handleCancelBrowsing);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -134,6 +204,7 @@
 		<s:HGroup>
 			<s:Button id="btnSave" label="Save" click="saveFile()" />
 			<s:Button id="btnSaveAs" label="Save as.." click="browseForSaving()" />
+			<s:Button id="btnOpen" label="Open" click="browseForOpening()" />
 		</s:HGroup>
 		<s:Button label="Add Grid Object" click="addGridObject()" />
 		<customize:CustomizePanel id="customizePanel" />
