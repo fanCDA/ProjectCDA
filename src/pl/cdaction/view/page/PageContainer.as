@@ -44,5 +44,29 @@ package pl.cdaction.view.page
 			
 			return pageObject;
 		}
+		
+		public function setPageData(pageData : Object) : void
+		{
+			if(pageData.text)
+			{
+				_tf.text = pageData.text;
+				
+				var textFormat : TextFormat = getTextFormat();
+				
+				if(pageData.font)
+					textFormat.font = pageData.font;
+				
+				if(pageData.size)
+					textFormat.size = pageData.size;
+				
+				if(pageData.color)
+					textFormat.color = pageData.color;
+				
+				setTextFormat( textFormat );
+			}
+			
+			if(pageData.bg)
+				setBgColour( pageData.bg );
+		}
 	}
 }

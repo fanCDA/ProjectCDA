@@ -67,14 +67,27 @@ package pl.cdaction.view.grid
 		{
 			return _tfLabel.text;
 		}
+		public function setLabel(value : String) : void
+		{
+			_tfLabel.text = value;
+		}
 		
 		public function getLeftPageContent() : Array
 		{
 			return [ _pageContainerLeft.getPageObject() ];
 		}
+		public function setLeftPageContent(pageL : Array) : void
+		{
+			_pageContainerLeft.setPageData( pageL[0] );
+		}
+		
 		public function getRightPageContent() : Array
 		{
 			return [ _pageContainerRight.getPageObject() ];
+		}
+		public function setRightPageContent(pageR : Array) : void
+		{
+			_pageContainerRight.setPageData( pageR[0] );
 		}
 		
 		

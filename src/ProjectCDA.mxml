@@ -30,17 +30,22 @@
 				
 				_saveLoadController = new SaveLoadController();
 				_saveLoadController.sigBrowsing.add( handleBrowsing );
+				_saveLoadController.sigDataLoaded.add( handleDataLoaded );
 				
+				createGridView();
+			}
+			
+			private function createGridView() : void
+			{
 				_gridView = new GridView();
 				mainContainer.addChild(_gridView);
-				
 				_gridView.sigCustomizeMe.add( handleSigCustomizeMe );
 			}
 			
 			
 			private function addGridObject() : void
 			{
-				_gridView.addNew();
+				_gridView.addEmpty();
 			}
 			
 			private function handleSigCustomizeMe(item : ICustomizable) : void
@@ -67,6 +72,27 @@
 			private function handleBrowsing(isBrowsing : Boolean) : void
 			{
 				btnSave.enabled = btnSaveAs.enabled = btnOpen.enabled = !isBrowsing;
+			}
+			
+			private function handleDataLoaded(loadedData : Object) : void
+			{
+				handleSigCustomizeMe(null);
+				
+				_gridView.sigCustomizeMe.remove( handleSigCustomizeMe );
+				_gridView.destroy();
+				mainContainer.removeChild(_gridView);
+				_gridView = null;
+				
+				createGridView();
+				
+				
+				//Create Objects
+				for each(var obj:Object in loadedData.gridObjects)
+				{
+					_gridView.addCustomized(obj.label, obj.pageL, obj.pageR);
+				}
+				
+				_gridView.handleResize();
 			}
 			
 			

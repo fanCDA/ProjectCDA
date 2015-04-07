@@ -11,6 +11,7 @@ package pl.cdaction.controller
 	public class SaveLoadController
 	{
 		private var _sigBrowsing : Signal;
+		private var _sigDataLoaded : Signal;
 		
 		private var _currentFile : File;
 		private var _docsDir : File;
@@ -29,6 +30,7 @@ package pl.cdaction.controller
 			_docsDir = File.documentsDirectory;
 			
 			_sigBrowsing = new Signal(Boolean);
+			_sigDataLoaded = new Signal(Object);
 		}
 		
 		
@@ -150,11 +152,7 @@ package pl.cdaction.controller
 		
 		private function handleFileDataLoadedAndParsed(fileDataObj : Object) : void
 		{
-			trace("Total =>", fileDataObj.totalItems);
-			for each(var obj:Object in fileDataObj.gridObjects)
-			{
-				trace(obj.pageL, obj.pageR);
-			}
+			_sigDataLoaded.dispatch( fileDataObj );
 		}
 		
 		
@@ -179,6 +177,11 @@ package pl.cdaction.controller
 		public function get sigBrowsing() : Signal
 		{
 			return _sigBrowsing;
+		}
+		
+		public function get sigDataLoaded() : Signal
+		{
+			return _sigDataLoaded;
 		}
 	}
 }

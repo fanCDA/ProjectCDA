@@ -26,7 +26,7 @@ package pl.cdaction.view.grid
 			_touchController = new GridTouchController(this);
 		}
 		
-		public function addNew() : void
+		public function addEmpty() : void
 		{
 			var gridObj : GridObject = new GridObject( _gridItems.length );
 			
@@ -38,7 +38,22 @@ package pl.cdaction.view.grid
 			
 			_gridItems.push(gridObj);
 			_touchController.registerGridObj( gridObj );
-		}		
+		}
+		
+		public function addCustomized(label : String, pageL : Object, pageR : Object) : void
+		{
+			var gridObj : GridObject = new GridObject( _gridItems.length );
+			addChild(gridObj);
+			
+			if(label)
+				gridObj.setLabel( label );
+			
+			gridObj.setLeftPageContent( pageL as Array );
+			gridObj.setRightPageContent( pageR as Array );
+			
+			_gridItems.push(gridObj);
+			_touchController.registerGridObj( gridObj );
+		}
 		
 		public function handleResize() : void
 		{
