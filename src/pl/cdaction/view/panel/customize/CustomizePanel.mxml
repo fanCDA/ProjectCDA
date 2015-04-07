@@ -66,30 +66,38 @@
 			public function registerObjToCustomize(obj : ICustomizable) : void
 			{
 				_obj = obj;
-				_textFormat = _obj.getTextFormat();
 				
-				if(_textFormat.font != null && _fontsDict[_textFormat.font])
-					fontList.selectedIndex = _fontsDict[_textFormat.font];
+				if(_obj)
+				{
+					_textFormat = _obj.getTextFormat();
+					
+					if(_textFormat.font != null && _fontsDict[_textFormat.font])
+						fontList.selectedIndex = _fontsDict[_textFormat.font];
+					else
+						fontList.selectedIndex = _fontsDict[Constants.DEFAULT_FONT_NAME];
+					
+					
+					if(_textFormat.size != null)
+						fontSize.text = _textFormat.size + "";
+					else
+						fontSize.text = Constants.DEFAULT_FONT_SIZE + "";
+					
+					
+					if(_textFormat.color != null)
+						fontColour.selectedColor = uint(_textFormat.color);
+					else
+						fontColour.selectedColor = Constants.DEFAULT_FONT_COLOUR;
+					
+					
+					bgColour.selectedColor = _obj.getBgColour();
+					
+					
+					enableAll();
+				}
 				else
-					fontList.selectedIndex = _fontsDict[Constants.DEFAULT_FONT_NAME];
-				
-				
-				if(_textFormat.size != null)
-					fontSize.text = _textFormat.size + "";
-				else
-					fontSize.text = Constants.DEFAULT_FONT_SIZE + "";
-				
-				
-				if(_textFormat.color != null)
-					fontColour.selectedColor = uint(_textFormat.color);
-				else
-					fontColour.selectedColor = Constants.DEFAULT_FONT_COLOUR;
-				
-				
-				bgColour.selectedColor = _obj.getBgColour();
-				
-				
-				enableAll();
+				{
+					disableAll();
+				}
 			}
 			
 			
