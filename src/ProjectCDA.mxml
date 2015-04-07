@@ -11,15 +11,14 @@
 			import mx.events.FlexNativeWindowBoundsEvent;
 			
 			import pl.cdaction.common.Globals;
+			import pl.cdaction.controller.SaveLoadController;
 			import pl.cdaction.view.customizable.ICustomizable;
 			import pl.cdaction.view.grid.GridView;
 			
 			
-			private var _currentFile : File;
-			private var _docsDir : File;
-			private var _fileStream : FileStream;
-			
 			private var _gridView : GridView;
+			
+			private var _saveLoadController : SaveLoadController;
 			
 			
 			protected function init(event : FlexEvent) : void
@@ -29,12 +28,15 @@
 				var tmpTf : TextField = new TextField();
 				Globals.DEFAULT_TEXT_FORMAT = tmpTf.defaultTextFormat;
 				
-				_docsDir = File.documentsDirectory;
+				_saveLoadController = new SaveLoadController();
+				_saveLoadController.sigBrowsing.add( handleBrowsing );
+				
 				_gridView = new GridView();
 				mainContainer.addChild(_gridView);
 				
 				_gridView.sigCustomizeMe.add( handleSigCustomizeMe );
 			}
+			
 			
 			private function addGridObject() : void
 			{
@@ -47,150 +49,31 @@
 			}
 			
 			
-			private function onWindowResize(event : FlexNativeWindowBoundsEvent) : void
-			{
-				if(_gridView)
-					_gridView.handleResize();
-			}
-			
-			
 			private function saveFile() : void
 			{
-				if(_currentFile)
-				{
-					//Just save
-					performSaving();
-				}
-				else
-				{
-					//Pick where we should save
-					browseForSaving();
-				}
+				_saveLoadController.saveFile( _gridView.getAllItemsAsObject() );
 			}
 			
 			private function browseForSaving() : void
 			{
-				btnSave.enabled = btnSaveAs.enabled = false;
-				
-				try
-				{
-					_docsDir.browseForSave("Gdzie zapisac?");
-					_docsDir.addEventListener(Event.SELECT, handleFileForSaveSelected);
-					_docsDir.addEventListener(Event.CANCEL, handleCancelBrowsing);
-				}
-				catch (error:Error)
-				{
-					trace("Cos poszlo nie tak:", error.message);
-				}
+				_saveLoadController.browseForSaving( _gridView.getAllItemsAsObject() );
 			}
-			
-			private function handleFileForSaveSelected(event : Event) : void
-			{
-				btnSave.enabled = btnSaveAs.enabled = true;
-				cleanListeners();
-				
-				_currentFile = new File( (event.target as File).nativePath + ".json" );
-				performSaving();
-			}
-			
-			protected function handleCancelBrowsing(event:Event) : void
-			{
-				btnSave.enabled = btnSaveAs.enabled = true;
-				cleanListeners();
-			}
-			
-			private function performSaving() : void
-			{
-				var gridObjects : Object = _gridView.getAllItemsAsObject();
-				
-				if(_fileStream == null)
-					_fileStream = new FileStream();
-				
-				try
-				{
-					_fileStream.open(_currentFile, FileMode.WRITE);
-					_fileStream.writeUTFBytes( JSON.stringify(gridObjects) );
-				}
-				catch (e:Error)
-				{
-					trace(e.message);
-				}
-				finally
-				{
-					_fileStream.close();
-				}
-			}
-			
 			
 			private function browseForOpening() : void
 			{
-				var fileFilter : FileFilter = new FileFilter("JSON data files", "*.json");
-				
-				if(_currentFile)
-				{
-					_currentFile.addEventListener(Event.SELECT, handleFileForOpenSelected);
-					_currentFile.addEventListener(Event.CANCEL, handleCancelBrowsing);
-					_currentFile.browseForOpen("Gdzie ten plik?", [fileFilter] );
-				}
-				else
-				{
-					_docsDir.addEventListener(Event.SELECT, handleFileForOpenSelected);
-					_docsDir.addEventListener(Event.CANCEL, handleCancelBrowsing);
-					_docsDir.browseForOpen("Gdzie ten plik?", [fileFilter] );
-				}
+				_saveLoadController.browseForOpening();
 			}
 			
-			private function handleFileForOpenSelected(event : Event) : void
+			private function handleBrowsing(isBrowsing : Boolean) : void
 			{
-				btnSave.enabled = btnSaveAs.enabled = true;
-				cleanListeners();
-				
-				_currentFile = event.target as File;
-				
-				if(_fileStream == null)
-					_fileStream = new FileStream();
-				
-				try
-				{
-					_fileStream.open(_currentFile, FileMode.READ);
-					var fileDataString : String = _fileStream.readUTFBytes( _fileStream.bytesAvailable );
-					var fileDataObj : Object = JSON.parse( fileDataString );
-				}
-				catch (e:Error)
-				{
-					trace(e.message);
-				}
-				finally
-				{
-					_fileStream.close();
-					handleFileDataLoadedAndParsed( fileDataObj );
-				}
-			}
-			
-			private function handleFileDataLoadedAndParsed(fileDataObj : Object) : void
-			{
-				trace("Total =>", fileDataObj.totalItems);
-				for each(var obj:Object in fileDataObj.gridObjects)
-				{
-					trace(obj.pageL, obj.pageR);
-				}
+				btnSave.enabled = btnSaveAs.enabled = btnOpen.enabled = !isBrowsing;
 			}
 			
 			
-			
-			private function cleanListeners() : void
+			private function onWindowResize(event : FlexNativeWindowBoundsEvent) : void
 			{
-				if(_docsDir)
-				{
-					_docsDir.removeEventListener(Event.SELECT, handleFileForSaveSelected);
-					_docsDir.removeEventListener(Event.SELECT, handleFileForOpenSelected);
-					_docsDir.removeEventListener(Event.CANCEL, handleCancelBrowsing);
-				}
-				if(_currentFile)
-				{
-					_currentFile.removeEventListener(Event.SELECT, handleFileForOpenSelected);
-					_currentFile.removeEventListener(Event.CANCEL, handleCancelBrowsing);
-				}
+				if(_gridView)
+					_gridView.handleResize();
 			}
 			
 		]]>
