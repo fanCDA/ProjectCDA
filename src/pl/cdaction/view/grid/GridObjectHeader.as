@@ -44,5 +44,15 @@ package pl.cdaction.view.grid
 			_tfLeft.text = labelLeft;
 			_tfRight.text = labelRight;
 		}
+		
+		
+		public function destroy() : void
+		{
+			removeChild(_tfLeft);
+			removeChild(_tfRight);
+			
+			_tfLeft = null;
+			_tfRight = null;
+		}
 	}
 }

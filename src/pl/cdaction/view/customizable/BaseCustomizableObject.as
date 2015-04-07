@@ -70,5 +70,16 @@ package pl.cdaction.view.customizable
 			_bg.graphics.drawRect(0, 0, _containerWidth, _containerHeight);
 			_bg.graphics.endFill();
 		}
+		
+		
+		public function destroy() : void
+		{
+			_bg.graphics.clear();
+			removeChild(_bg);
+			_bg = null;
+			
+			removeChild(_tf);
+			_tf = null;
+		}
 	}
 }

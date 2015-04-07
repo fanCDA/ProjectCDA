@@ -41,9 +41,14 @@ package pl.cdaction.controller
 		}
 		
 		
-		public function registerGridObj(gridObj:GridObject):void
+		public function registerGridObj(gridObj : GridObject) : void
 		{
 			gridObj.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		}
+		
+		public function unregisterGridObj(gridObj : GridObject) : void
+		{
+			gridObj.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 		
 		
@@ -126,6 +131,16 @@ package pl.cdaction.controller
 			_obj.mouseEnabled = _obj.mouseChildren = true;
 			_obj.alpha = 1;
 			_obj = null;
+		}
+		
+		
+		public function destroy() : void
+		{
+			_gridView.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_gridView.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_gridView = null;
+			_obj = null;
+			_startPos = null;
 		}
 	}
 }

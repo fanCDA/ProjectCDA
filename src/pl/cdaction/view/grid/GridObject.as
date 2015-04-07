@@ -76,5 +76,29 @@ package pl.cdaction.view.grid
 		{
 			return [ _pageContainerRight.getPageObject() ];
 		}
+		
+		
+		public function destroy() : void
+		{
+			_bg.graphics.clear();
+			removeChild(_bg);
+			_bg = null;
+			
+			_header.destroy();
+			removeChild(_header);
+			_header = null;
+			
+			removeChild(_tfLabel);
+			_tfLabel = null;
+			
+			
+			_pageContainerLeft.destroy();
+			removeChild(_pageContainerLeft);
+			_pageContainerLeft = null;
+			
+			_pageContainerRight.destroy();
+			removeChild(_pageContainerRight);
+			_pageContainerRight = null;
+		}
 	}
 }

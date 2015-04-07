@@ -109,5 +109,21 @@ package pl.cdaction.view.grid
 			
 			return mainObj;
 		}
+		
+		
+		public function destroy() : void
+		{
+			_sigCustomizeMe.removeAll();
+			
+			for each(var gridObj : GridObject in _gridItems)
+			{
+				_touchController.unregisterGridObj( gridObj );
+				gridObj.destroy();
+			}
+			_gridItems.length = 0;
+			
+			_touchController.destroy();
+			_touchController = null;
+		}
 	}
 }
