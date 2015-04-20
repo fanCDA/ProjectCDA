@@ -37,18 +37,18 @@ package pl.cdaction.controller
 		protected function handleAddedToStage(event : Event) : void
 		{
 			_gridView.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-			_gridView.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_gridView.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseUp);
 		}
 		
 		
 		public function registerGridObj(gridObj : GridObject) : void
 		{
-			gridObj.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			gridObj.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseDown);
 		}
 		
 		public function unregisterGridObj(gridObj : GridObject) : void
 		{
-			gridObj.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			gridObj.removeEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseDown);
 		}
 		
 		
@@ -137,7 +137,7 @@ package pl.cdaction.controller
 		public function destroy() : void
 		{
 			_gridView.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			_gridView.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_gridView.stage.removeEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseUp);
 			_gridView = null;
 			_obj = null;
 			_startPos = null;
