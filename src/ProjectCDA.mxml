@@ -3,11 +3,13 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:customize="pl.cdaction.view.panel.customize.*"
+					   menu="{nativeMenu}"
 					   applicationComplete="init(event)"
 					   windowResize="onWindowResize(event)">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
+			import mx.events.FlexNativeMenuEvent;
 			import mx.events.FlexNativeWindowBoundsEvent;
 			
 			import pl.cdaction.common.Globals;
@@ -16,14 +18,17 @@
 			import pl.cdaction.view.grid.GridView;
 			
 			
-			private var _gridView : GridView;
 			
+			private var _gridView : GridView;
 			private var _saveLoadController : SaveLoadController;
+			private var _isBrowsing : Boolean;
 			
 			
 			protected function init(event : FlexEvent) : void
 			{
 				trace("[ProjectCDA.mxml] INIT");
+				
+				_isBrowsing = false;
 				
 				var tmpTf : TextField = new TextField();
 				Globals.DEFAULT_TEXT_FORMAT = tmpTf.defaultTextFormat;
@@ -71,7 +76,7 @@
 			
 			private function handleBrowsing(isBrowsing : Boolean) : void
 			{
-				btnSave.enabled = btnSaveAs.enabled = btnOpen.enabled = !isBrowsing;
+				_isBrowsing = isBrowsing;
 			}
 			
 			private function handleDataLoaded(loadedData : Object) : void
@@ -96,6 +101,64 @@
 			}
 			
 			
+			/**
+			 * Return an array containing the key code of the standard
+			 * modifier key for either Mac or Windows
+			 */
+			private function standardOSModifier(item:Object):Array{
+				var modifiers:Array = new Array();
+				if((Capabilities.os.indexOf("Windows") >= 0)){
+					modifiers.push(Keyboard.CONTROL);
+				} else if (Capabilities.os.indexOf("Mac OS") >= 0){
+					modifiers.push(Keyboard.COMMAND);
+				}
+				return modifiers;
+			}
+			
+			//Handle menu commands from the application, window, dock and system tray icon menus
+			private function nativeMenuCommand(menuEvent : FlexNativeMenuEvent) : void
+			{
+				if(_isBrowsing)
+					return;		// Disable handling if we're browsing
+				
+				doCommand(menuEvent.item.@command);
+				log(menuEvent.item.@command + " from " + menuEvent.currentTarget);
+			}
+			
+			//Execute the selected command
+			private function doCommand(command : String) : void {
+				switch(command) {
+					case "New":
+						// Nothing here just yet
+						break;
+					
+					case "Open":
+						browseForOpening();
+						break;
+					
+					case "Save":
+						saveFile();
+						break;
+					
+					case "SaveAs":
+						browseForSaving();
+						break;
+					
+					case "Quit":
+						this.nativeApplication.exit();
+						break;
+					
+					default:
+						log("Unrecognized command: " + command);
+				}
+			}
+			
+			private function log(message : String) : void {
+				trace(message);
+				this.status = message;
+			}
+			
+			
 			private function onWindowResize(event : FlexNativeWindowBoundsEvent) : void
 			{
 				if(_gridView)
@@ -107,14 +170,31 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!-- Menu definition for application, window, dock icon, system tray icon, and MenuBar menus -->
+		<fx:XML id="applicationMenu" format="e4x">
+			<menubar>
+				<menu label="Plik">
+					<menuitem label="Nowa" command="New" key="n"/>
+					<menuitem label="Otworz" command="Open" key="o"/>
+					<menuitem label="Zapisz" command="Save" key="s"/>
+					<menuitem label="Zapisz jako" command="SaveAs"/>
+					<menuitem type="separator"/>
+					<menuitem label="Zakoncz" command="Quit"/>
+				</menu>
+				
+				<menu label="Statystyka">
+					<menuitem label="Statystyka reklam" command="Stats"/>
+				</menu>
+			</menubar>
+		</fx:XML>
+		
+		<!-- Menu components -->
+		<mx:FlexNativeMenu id="nativeMenu" dataProvider="{applicationMenu}" labelField="@label" keyEquivalentField="@key" keyEquivalentModifiersFunction="standardOSModifier" showRoot="false" itemClick="nativeMenuCommand(event)"/>
 	</fx:Declarations>
 	
+	
 	<s:VGroup width="100%">
-		<s:HGroup>
-			<s:Button id="btnSave" label="Save" click="saveFile()" />
-			<s:Button id="btnSaveAs" label="Save as.." click="browseForSaving()" />
-			<s:Button id="btnOpen" label="Open" click="browseForOpening()" />
-		</s:HGroup>
 		<s:Button label="Add Grid Object" click="addGridObject()" />
 		<customize:CustomizePanel id="customizePanel" />
 		<mx:UIComponent id="mainContainer" />
